@@ -1,33 +1,28 @@
 import styles from "./Pokemons.module.scss";
 
-export function Pokemons() {
+type PokemonsProps = {
+  onPokemonNameClicked: (pokemonName: string) => void;
+};
+
+const pokemons = ["Abra", "Pikachu", "Charmander", "Ditto", "Gengar"];
+
+export function Pokemons({ onPokemonNameClicked }: PokemonsProps) {
   return (
     <menu>
-      <li className={styles.listItem}>
-        <a href="" className={styles.link}>
-          Abra
-        </a>
-      </li>
-      <li className={styles.listItem}>
-        <a href="" className={styles.link}>
-          Pikachu
-        </a>
-      </li>
-      <li className={styles.listItem}>
-        <a href="" className={styles.link}>
-          Charmander
-        </a>
-      </li>
-      <li className={styles.listItem}>
-        <a href="" className={styles.link}>
-          Ditto
-        </a>
-      </li>
-      <li className={styles.listItem}>
-        <a href="" className={styles.link}>
-          Gengar
-        </a>
-      </li>
+      {pokemons.map((pokemonName) => (
+        <li className={styles.listItem}>
+          <a
+            href=""
+            className={styles.link}
+            onClick={(e) => {
+              e.preventDefault();
+              onPokemonNameClicked(pokemonName);
+            }}
+          >
+            {pokemonName}
+          </a>
+        </li>
+      ))}
     </menu>
   );
 }
