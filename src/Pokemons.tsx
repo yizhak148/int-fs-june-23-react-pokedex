@@ -1,20 +1,32 @@
+import styles from "./Pokemons.module.scss";
+
 export function Pokemons() {
   return (
     <menu>
-      <li>
-        <a href="">Abra</a>
+      <li className={styles.listItem}>
+        <a href="" className={styles.link}>
+          Abra
+        </a>
       </li>
-      <li>
-        <a href="">Pikachu</a>
+      <li className={styles.listItem}>
+        <a href="" className={styles.link}>
+          Pikachu
+        </a>
       </li>
-      <li>
-        <a href="">Charmander</a>
+      <li className={styles.listItem}>
+        <a href="" className={styles.link}>
+          Charmander
+        </a>
       </li>
-      <li>
-        <a href="">Ditto</a>
+      <li className={styles.listItem}>
+        <a href="" className={styles.link}>
+          Ditto
+        </a>
       </li>
-      <li>
-        <a href="">Gengar</a>
+      <li className={styles.listItem}>
+        <a href="" className={styles.link}>
+          Gengar
+        </a>
       </li>
     </menu>
   );

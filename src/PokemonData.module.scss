@@ -1,0 +1,13 @@
+.pokemonData {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 1rem;
+    padding: 1rem;
+    align-items: baseline;
+}
+
+.pokemonStats {
+    background: hsl(0deg 20% 20%);
+    padding: 1rem;
+    border-radius: 8px;
+}
