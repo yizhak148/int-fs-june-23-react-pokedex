@@ -10,7 +10,7 @@ export function Pokemons({ onPokemonNameClicked }: PokemonsProps) {
   return (
     <menu>
       {pokemons.map((pokemonName) => (
-        <li className={styles.listItem}>
+        <li key={pokemonName} className={styles.listItem}>
           <a
             href=""
             className={styles.link}

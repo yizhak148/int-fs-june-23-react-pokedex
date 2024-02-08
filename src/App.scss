@@ -2,7 +2,6 @@ main {
     display: grid;
     grid-template-rows: auto 1fr;
     grid-template-columns: auto 1fr;
-    align-items: baseline;
 }
 
 .app-title {
