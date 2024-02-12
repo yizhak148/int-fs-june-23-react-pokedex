@@ -1,6 +1,12 @@
 import axios from "axios";
 import styles from "./PokemonData.module.scss";
-import { useEffect, useState } from "react";
+import { useAsync } from "./useAsync";
+import { useCallback } from "react";
+
+type PokemonData = {
+  sprites: { other: { "official-artwork": { front_default: string } } };
+  stats: { stat: { name: string }; base_stat: number }[];
+};
 
 type PokemonDataProps = {
   name: string;
@@ -12,7 +18,7 @@ async function getPokemonData(pokemonName: string) {
   //   }
   //   await new Promise((resolve) => setTimeout(resolve, Math.random() * 3000));
 
-  const res = await axios.get(
+  const res = await axios.get<PokemonData>(
     `https://pokeapi.co/api/v2/pokemon/${pokemonName.toLowerCase()}`
   );
 
@@ -20,27 +26,10 @@ async function getPokemonData(pokemonName: string) {
 }
 
 export function PokemonData({ name }: PokemonDataProps) {
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  const [pokemonData, setPokemonData] = useState<any>(null);
+  const getCurrentPokemonData = useCallback(() => getPokemonData(name), [name]);
+  const { isLoading, data: pokemonData } = useAsync(getCurrentPokemonData);
 
-  useEffect(() => {
-    let isCanceled = false;
-
-    setPokemonData(null);
-    getPokemonData(name).then((pokemonData) => {
-      if (isCanceled) {
-        return;
-      }
-
-      setPokemonData(pokemonData);
-    });
-
-    return () => {
-      isCanceled = true;
-    };
-  }, [name]);
-
-  if (!pokemonData) {
+  if (isLoading) {
     return (
       <article className={styles.pokemonData}>
         <p className={styles.loadingIndicator}>Loading...</p>
@@ -53,28 +42,32 @@ export function PokemonData({ name }: PokemonDataProps) {
       <article>
         <h2>{name}</h2>
         <img
-          src={pokemonData.sprites.other["official-artwork"].front_default}
+          src={pokemonData?.sprites.other["official-artwork"].front_default}
           alt=""
         />
       </article>
       <article className={styles.pokemonStats}>
         <h3>Stats</h3>
         <ul>
-          <li>HP: {getStat(pokemonData, "hp")}</li>
-          <li>Attack: {getStat(pokemonData, "attack")}</li>
-          <li>Defense: {getStat(pokemonData, "defense")}</li>
-          <li>Special attack: {getStat(pokemonData, "special-attack")}</li>
-          <li>Special defense: {getStat(pokemonData, "special-defense")}</li>
-          <li>Speed: {getStat(pokemonData, "speed")}</li>
+          <li>HP: {pokemonData && getStat(pokemonData, "hp")}</li>
+          <li>Attack: {pokemonData && getStat(pokemonData, "attack")}</li>
+          <li>Defense: {pokemonData && getStat(pokemonData, "defense")}</li>
+          <li>
+            Special attack:{" "}
+            {pokemonData && getStat(pokemonData, "special-attack")}
+          </li>
+          <li>
+            Special defense:{" "}
+            {pokemonData && getStat(pokemonData, "special-defense")}
+          </li>
+          <li>Speed: {pokemonData && getStat(pokemonData, "speed")}</li>
         </ul>
       </article>
     </article>
   );
 }
 
-// eslint-disable-next-line @typescript-eslint/no-explicit-any
-function getStat(pokemonData: any, statName: string) {
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  return pokemonData.stats.find((stat: any) => stat.stat.name === statName)
-    .base_stat;
+function getStat(pokemonData: PokemonData, statName: string) {
+  return pokemonData.stats.find((stat) => stat.stat.name === statName)
+    ?.base_stat;
 }
