@@ -8,6 +8,13 @@
 
 .pokemonStats {
     background: hsl(0deg 20% 20%);
-    padding: 1rem;
+    padding: 0.5rem 1rem;
     border-radius: 8px;
+}
+
+.loadingIndicator {
+    padding-top: 0.5rem;
+    font-size: 1.2rem;
+    line-height: 1.2;
+    font-weight: 700;
 }

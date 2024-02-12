@@ -43,7 +43,7 @@ export function PokemonData({ name }: PokemonDataProps) {
   if (!pokemonData) {
     return (
       <article className={styles.pokemonData}>
-        <h2>Loading...</h2>
+        <p className={styles.loadingIndicator}>Loading...</p>
       </article>
     );
   }
