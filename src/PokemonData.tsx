@@ -7,9 +7,9 @@ type PokemonDataProps = {
 };
 
 async function getPokemonData(pokemonName: string) {
-  if (pokemonName === "Abra") {
-    await new Promise((resolve) => setTimeout(resolve, 5000));
-  }
+  //   if (pokemonName === "Abra") {
+  //     await new Promise((resolve) => setTimeout(resolve, 5000));
+  //   }
   //   await new Promise((resolve) => setTimeout(resolve, Math.random() * 3000));
 
   const res = await axios.get(
