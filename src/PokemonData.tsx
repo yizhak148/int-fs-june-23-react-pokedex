@@ -1,8 +1,8 @@
+import { MouseEventHandler, useCallback, useState } from "react";
 import axios from "axios";
-import styles from "./PokemonData.module.scss";
-import { useAsync } from "./useAsync";
-import { useCallback, useState } from "react";
 import { PokemonEncounters } from "./PokemonEncounters";
+import { useAsync } from "./useAsync";
+import styles from "./PokemonData.module.scss";
 
 type PokemonData = {
   sprites: { other: { "official-artwork": { front_default: string } } };
@@ -27,9 +27,13 @@ async function getPokemonData(pokemonName: string) {
 }
 
 export function PokemonData({ name }: PokemonDataProps) {
-  const getCurrentPokemonData = useCallback(() => getPokemonData(name), [name]);
-  const { isLoading, data: pokemonData } = useAsync(getCurrentPokemonData);
-  const [isEncountersDialogOpen, setIsEncountersDialogOpen] = useState(false);
+  const {
+    isLoading,
+    pokemonData,
+    isEncountersDialogOpen,
+    openEncountersDialog,
+    closeEncountersDialog,
+  } = usePokemonData(name);
 
   if (isLoading) {
     return (
@@ -68,14 +72,7 @@ export function PokemonData({ name }: PokemonDataProps) {
         </article>
         <menu>
           <li>
-            <a
-              href=""
-              onClick={(e) => {
-                e.preventDefault();
-
-                setIsEncountersDialogOpen(true);
-              }}
-            >
+            <a href="" onClick={openEncountersDialog}>
               Where to find?
             </a>
           </li>
@@ -84,11 +81,33 @@ export function PokemonData({ name }: PokemonDataProps) {
       {isEncountersDialogOpen && (
         <PokemonEncounters
           pokemonName={name}
-          onCloseClick={() => setIsEncountersDialogOpen(false)}
+          onCloseClick={closeEncountersDialog}
         />
       )}
     </>
   );
+}
+
+function usePokemonData(name: string) {
+  const getCurrentPokemonData = useCallback(() => getPokemonData(name), [name]);
+  const { isLoading, data: pokemonData } = useAsync(getCurrentPokemonData);
+  const [isEncountersDialogOpen, setIsEncountersDialogOpen] = useState(false);
+
+  const openEncountersDialog: MouseEventHandler<HTMLAnchorElement> = (e) => {
+    e.preventDefault();
+
+    setIsEncountersDialogOpen(true);
+  };
+
+  const closeEncountersDialog = () => setIsEncountersDialogOpen(false);
+
+  return {
+    isLoading,
+    pokemonData,
+    isEncountersDialogOpen,
+    openEncountersDialog,
+    closeEncountersDialog,
+  };
 }
 
 function getStat(pokemonData: PokemonData, statName: string) {
