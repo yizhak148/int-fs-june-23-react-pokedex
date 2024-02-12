@@ -1,7 +1,8 @@
 import axios from "axios";
 import styles from "./PokemonData.module.scss";
 import { useAsync } from "./useAsync";
-import { useCallback } from "react";
+import { useCallback, useState } from "react";
+import { PokemonEncounters } from "./PokemonEncounters";
 
 type PokemonData = {
   sprites: { other: { "official-artwork": { front_default: string } } };
@@ -28,6 +29,7 @@ async function getPokemonData(pokemonName: string) {
 export function PokemonData({ name }: PokemonDataProps) {
   const getCurrentPokemonData = useCallback(() => getPokemonData(name), [name]);
   const { isLoading, data: pokemonData } = useAsync(getCurrentPokemonData);
+  const [isEncountersDialogOpen, setIsEncountersDialogOpen] = useState(false);
 
   if (isLoading) {
     return (
@@ -38,32 +40,54 @@ export function PokemonData({ name }: PokemonDataProps) {
   }
 
   return (
-    <article className={styles.pokemonData}>
-      <article>
-        <h2>{name}</h2>
-        <img
-          src={pokemonData?.sprites.other["official-artwork"].front_default}
-          alt=""
+    <>
+      <article className={styles.pokemonData}>
+        <article>
+          <h2>{name}</h2>
+          <img
+            src={pokemonData?.sprites.other["official-artwork"].front_default}
+            alt=""
+          />
+        </article>
+        <article className={styles.pokemonStats}>
+          <h3>Stats</h3>
+          <ul>
+            <li>HP: {pokemonData && getStat(pokemonData, "hp")}</li>
+            <li>Attack: {pokemonData && getStat(pokemonData, "attack")}</li>
+            <li>Defense: {pokemonData && getStat(pokemonData, "defense")}</li>
+            <li>
+              Special attack:{" "}
+              {pokemonData && getStat(pokemonData, "special-attack")}
+            </li>
+            <li>
+              Special defense:{" "}
+              {pokemonData && getStat(pokemonData, "special-defense")}
+            </li>
+            <li>Speed: {pokemonData && getStat(pokemonData, "speed")}</li>
+          </ul>
+        </article>
+        <menu>
+          <li>
+            <a
+              href=""
+              onClick={(e) => {
+                e.preventDefault();
+
+                setIsEncountersDialogOpen(true);
+              }}
+            >
+              Where to find?
+            </a>
+          </li>
+        </menu>
+      </article>
+      {isEncountersDialogOpen && (
+        <PokemonEncounters
+          pokemonName={name}
+          onCloseClick={() => setIsEncountersDialogOpen(false)}
         />
-      </article>
-      <article className={styles.pokemonStats}>
-        <h3>Stats</h3>
-        <ul>
-          <li>HP: {pokemonData && getStat(pokemonData, "hp")}</li>
-          <li>Attack: {pokemonData && getStat(pokemonData, "attack")}</li>
-          <li>Defense: {pokemonData && getStat(pokemonData, "defense")}</li>
-          <li>
-            Special attack:{" "}
-            {pokemonData && getStat(pokemonData, "special-attack")}
-          </li>
-          <li>
-            Special defense:{" "}
-            {pokemonData && getStat(pokemonData, "special-defense")}
-          </li>
-          <li>Speed: {pokemonData && getStat(pokemonData, "speed")}</li>
-        </ul>
-      </article>
-    </article>
+      )}
+    </>
   );
 }
 

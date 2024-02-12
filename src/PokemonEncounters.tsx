@@ -1,8 +1,11 @@
 import styles from "./PokemonEncounters.module.scss";
 
-type PokemonEncountersProps = { pokemonName: string };
+type PokemonEncountersProps = { pokemonName: string; onCloseClick: () => void };
 
-export function PokemonEncounters({ pokemonName }: PokemonEncountersProps) {
+export function PokemonEncounters({
+  pokemonName,
+  onCloseClick,
+}: PokemonEncountersProps) {
   return (
     <div className={styles.wrapper}>
       <article className={styles.dialog}>
@@ -31,7 +34,16 @@ export function PokemonEncounters({ pokemonName }: PokemonEncountersProps) {
         </ul>
         <menu>
           <li>
-            <a href="">Close</a>
+            <a
+              href=""
+              onClick={(e) => {
+                e.preventDefault();
+
+                onCloseClick();
+              }}
+            >
+              Close
+            </a>
           </li>
         </menu>
       </article>
