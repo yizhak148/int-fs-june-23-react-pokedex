@@ -1,4 +1,4 @@
-import { MouseEventHandler, useCallback, useState } from "react";
+import { MouseEventHandler, PropsWithChildren, useCallback, useState } from "react";
 import axios from "axios";
 import { PokemonEncounters } from "./PokemonEncounters";
 import { useAsync } from "./useAsync";
@@ -70,6 +70,7 @@ export function PokemonData({ name }: PokemonDataProps) {
             <li>Speed: {pokemonData && getStat(pokemonData, "speed")}</li>
           </ul>
         </article>
+        <ShareButton>share</ShareButton>
         <menu>
           <li>
             <a href="" onClick={openEncountersDialog}>
@@ -113,4 +114,24 @@ function usePokemonData(name: string) {
 function getStat(pokemonData: PokemonData, statName: string) {
   return pokemonData.stats.find((stat) => stat.stat.name === statName)
     ?.base_stat;
+}
+
+function ShareButton({ children }: PropsWithChildren) {
+  const [isShareDialogOpen, setIsShareDialogOpen] =useState(false)
+
+  const closeShareDialog = () => setIsShareDialogOpen(false);
+  const openShareDialog = () => setIsShareDialogOpen(true);
+
+  return(
+    <>
+    <button onClick={openShareDialog}>share</button>
+    {isShareDialogOpen && (
+      <div>
+      <input type="text" id="share-link" />
+      <button>copy</button>
+      <button onClick={closeShareDialog}>close</button>
+    </div>
+    )}
+    </>
+  )
 }

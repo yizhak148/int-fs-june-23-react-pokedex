@@ -2,6 +2,7 @@ import axios from "axios";
 import styles from "./PokemonEncounters.module.scss";
 import { useAsync } from "./useAsync";
 import { useCallback } from "react";
+
 type pokemonEncounter = {
   location_area: {
     name:string

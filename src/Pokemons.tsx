@@ -30,10 +30,9 @@ export function Pokemons({ onPokemonNameClicked }: PokemonsProps) {
       {data?.map((pokemonName) => (
         <li key={pokemonName} className={styles.listItem}>
           <a
-            href=""
+            href= {`#${pokemonName}`}
             className={styles.link}
             onClick={(e) => {
-              e.preventDefault();
               onPokemonNameClicked(pokemonName);
             }}
           >
